@@ -5,6 +5,7 @@ import io
 
 from fastapi import File
 
+
 def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
     """
     Rotate the hue of an image.
@@ -15,17 +16,18 @@ def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
         np.ndarray: Image with adjusted hue.
     """
     # Convert RGB to HSV
-    hsv_image = np.array(Image.fromarray(image).convert('HSV'))
+    hsv_image = np.array(Image.fromarray(image).convert("HSV"))
     hue, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
-    
+
     # Rotate hue
     hue = (hue + int(angle / 360 * 255)) % 255
     hsv_image[..., 0] = hue
-    
-    # Convert back to RGB
-    return np.array(Image.fromarray(hsv_image, 'HSV').convert('RGBA'))
 
-def create_hue_rotation_gif(input_image_bytes: File, frames: int=36) -> bytes:
+    # Convert back to RGB
+    return np.array(Image.fromarray(hsv_image, "HSV").convert("RGBA"))
+
+
+def create_hue_rotation_gif(input_image_bytes: File, frames: int = 36) -> bytes:
     """
     Create an animated GIF with rotating hue from an in-memory image.
     Args:
@@ -36,7 +38,7 @@ def create_hue_rotation_gif(input_image_bytes: File, frames: int=36) -> bytes:
     """
     # Load image from bytes
     image = iio.imread(io.BytesIO(input_image_bytes))
-    
+
     if image.shape[-1] == 4:  # RGBA
         alpha = image[..., 3]
         image_rgb = image[..., :3]
@@ -48,14 +50,13 @@ def create_hue_rotation_gif(input_image_bytes: File, frames: int=36) -> bytes:
     for i in range(frames):
         angle = 360 * i / frames
         rotated_image = rotate_hue(image_rgb, angle)
-        
+
         # Reattach the alpha channel
         rotated_image[..., 3] = alpha
         gif_frames.append(rotated_image)
 
     # Save as GIF to memory
     gif_output = io.BytesIO()
-    iio.imwrite(gif_output, gif_frames, format='GIF', loop=0, duration=100)
+    iio.imwrite(gif_output, gif_frames, format="GIF", loop=0, duration=100)
     gif_output.seek(0)  # Go to the beginning of the BytesIO buffer
     return gif_output.read()
-    
