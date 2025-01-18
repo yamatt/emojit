@@ -5,6 +5,11 @@ FROM gcr.io/distroless/python3-debian12:latest
 
 COPY --from=uv /uv /uvx /bin/
 
-RUN /bin/uv sync
+ADD pyproject.toml uv.lock src/app /app/
 
-ENTRYPOINT ["/horust", "--services-path", "/services"]
+WORKDIR /app
+
+SHELL ["busybox", "sh", "-c"]
+RUN ["/bin/uv", "sync"]
+
+ENTRYPOINT ["python3", "-m", "fastapi", "run", "/app/src/app/app.py"]
