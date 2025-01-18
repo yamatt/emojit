@@ -1,0 +1,15 @@
+[project]
+name = "emojit"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.115.6",
+    "imageio>=2.36.1",
+    "numpy>=2.2.1",
+    "pillow>=11.1.0",
+    "python-magic>=0.4.27",
+    "python-multipart>=0.0.20",
+]
+
