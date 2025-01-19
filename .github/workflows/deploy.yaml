@@ -29,9 +29,11 @@ jobs:
           dockerfile: Dockerfile
   deploy:
     runs-on: ubuntu-latest
-
+    needs:
+      - python-lint
+      - docker-lint
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Fly.io
+      - name: Setup Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
