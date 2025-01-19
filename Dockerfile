@@ -5,7 +5,7 @@ FROM python:3.12.8-slim-bookworm
 
 COPY --from=uv /uv /uvx /bin/
 
-ADD pyproject.toml uv.lock src/app /app/
+COPY pyproject.toml uv.lock src/app /app/
 
 WORKDIR /app
 
