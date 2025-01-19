@@ -7,6 +7,7 @@ Upload an emoji and it returns you an animated version based on your selection.
 - Rainbow party
 - Woop! Woop!
 - Turn me around
+- And then… explode
 
 ## Running Locally
 
