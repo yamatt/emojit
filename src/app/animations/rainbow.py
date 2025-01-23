@@ -1,11 +1,9 @@
+import io 
+from typing import BinaryIO
+
 import imageio.v3 as iio
 import numpy as np
 from PIL import Image
-import io
-
-from typing import BinaryIO
-
-from fastapi import File
 
 
 def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
