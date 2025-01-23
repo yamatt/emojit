@@ -9,6 +9,8 @@ Upload an emoji and it returns you an animated version based on your selection.
 - Turn me around
 - And then… explode
 
+You can find them at `/docs`.
+
 ## Running Locally
 
 ### CLI
