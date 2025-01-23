@@ -1,9 +1,9 @@
+import io 
+from typing import BinaryIO
+
 import imageio.v3 as iio
 import numpy as np
 from PIL import Image, ImageOps
-import io
-
-from fastapi import File
 
 
 def rotate_image(image: np.ndarray, angle: float) -> np.ndarray:
@@ -28,7 +28,7 @@ def rotate_image(image: np.ndarray, angle: float) -> np.ndarray:
     return np.array(rotated_image)
 
 
-def create_rotating_gif(input_image_bytes: File, frames: int = 36):
+def create_rotating_gif(uploaded_image: BinaryIO, frames: int = 36):
     """
     Create an animated GIF with rotating images from an in-memory image.
     Args:
@@ -38,20 +38,15 @@ def create_rotating_gif(input_image_bytes: File, frames: int = 36):
         bytes: The resulting animated GIF data in memory.
     """
     # Load image from bytes
-    image = iio.imread(io.BytesIO(input_image_bytes))
+    image = iio.imread(uploaded_image)
 
-    if image.shape[-1] == 4:  # RGBA
-        # Generate frames with rotating image
-        gif_frames = []
-        for i in range(frames):
-            angle = 360 * i / frames
-            rotated_image = rotate_image(image, angle)
-            gif_frames.append(rotated_image)
+    gif_frames = []
+    for i in range(frames):
+        angle = 360 * i / frames
+        rotated_image = rotate_image(image, angle)
+        gif_frames.append(rotated_image)
 
-        # Save as GIF to memory
-        gif_output = io.BytesIO()
+    # retrun gif as bytes
+    with io.BytesIO() as gif_output:
         iio.imwrite(gif_output, gif_frames, format="GIF", loop=0, duration=100)
-        gif_output.seek(0)  # Go to the beginning of the BytesIO buffer
-        return gif_output.read()
-    else:
-        raise ValueError("Image must have an alpha channel (RGBA).")
+        return gif_output.getvalue()
