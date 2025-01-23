@@ -47,9 +47,15 @@ def process(uploaded_file: UploadFile, func: callable) -> Response:
 
 @app.post("/rainbow")
 def rainbow(image: UploadFile = File(...)) -> Response:
+    """
+    Rotate through all the colours. Party style.
+    """
     return process(image, create_hue_rotation_gif)
 
 
 @app.post("/rotate")
 def rotate(image: UploadFile = File(...)) -> Response:
+    """
+    Make an image spin around. Like a record baby.
+    """
     return process(image, create_rotating_gif)
