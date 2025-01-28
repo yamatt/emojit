@@ -5,8 +5,35 @@
   </head>
   <body>
     <h1>Upload Image</h1>
-    <form action="http://localhost:8000/rainbow" method="post" enctype="multipart/form-data">
+    <h2>Rainbow</h2>
+    <form
+      action="http://localhost:8000/rainbow"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="image">Image:</label>
       <input type="file" name="image" placeholder="Image..." />
       <button type="submit">Get Animation</button>
+    </form>
+    <h2>Siren</h2>
+    <form
+      action="http://localhost:8000/siren"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="image">Image:</label>
+      <input type="file" name="image" placeholder="Image..." />
+      <button type="submit">Get Animation</button>
+    </form>
+    <h2>Rotate</h2>
+    <form
+      action="http://localhost:8000/rotate"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <label for="image">Image:</label>
+      <input type="file" name="image" placeholder="Image..." />
+      <button type="submit">Get Animation</button>
+    </form>
   </body>
 </html>
