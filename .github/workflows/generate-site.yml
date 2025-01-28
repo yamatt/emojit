@@ -6,7 +6,8 @@ on:
   push:
     branches: ["main"]
     paths:
-      - src/sites
+      - "src/sites/**"
+      - ".github/workflows/generate-site.yaml"
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -36,7 +37,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: './src/site'
+          path: "./src/site"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

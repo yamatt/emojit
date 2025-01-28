@@ -5,6 +5,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "src/app/**"
+      - "Dockerfile"
+      - "uv.lock"
+      - "pyproject.toml"
+      - "fly.toml"
+      - ".github/workflows/deploy.yaml"
 
 jobs:
   python-lint:
