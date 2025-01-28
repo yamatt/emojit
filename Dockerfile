@@ -1,7 +1,7 @@
 FROM ghcr.io/astral-sh/uv:0.5.21 as uv
 
 
-FROM python:3.12.8-slim-bookworm
+FROM python:3.12.8-bookworm
 
 COPY --from=uv /uv /uvx /bin/
 
@@ -11,4 +11,4 @@ WORKDIR /app
 
 RUN ["/bin/uv", "sync"]
 
-ENTRYPOINT ["python3", "-m", "fastapi", "run", "/app/src/app/app.py"]
+ENTRYPOINT ["uv", "run", "fastapi", "run", "/app/app.py"]
