@@ -4,7 +4,8 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import Response
 from magic import Magic
 
-from animations.rainbow import create_hue_rotation_gif
+from animations.rainbow import create_hue_rotation_gif as rainbow_gif
+from animations.siren import create_hue_rotation_gif as siren_gif
 from animations.rotate import create_rotating_gif
 
 from log import log
@@ -50,7 +51,15 @@ def rainbow(image: UploadFile = File(...)) -> Response:
     """
     Rotate through all the colours. Party style.
     """
-    return process(image, create_hue_rotation_gif)
+    return process(image, rainbow_gif)
+
+
+@app.post("/siren")
+def rainbow(image: UploadFile = File(...)) -> Response:
+    """
+    Blue to red and back again. Like a siren.
+    """
+    return process(image, siren_gif)
 
 
 @app.post("/rotate")
