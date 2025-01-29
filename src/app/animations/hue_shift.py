@@ -10,12 +10,24 @@ def bounce(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, m
     first_half_frame_count = frames_count // 2
     second_half_frame_count = frames_count - first_half_frame_count
 
+    frames: list = generate_frames(uploaded_image, first_half_frame_count, min_hue, max_hue)
+    frames.extend(generate_frames(uploaded_image, second_half_frame_count, max_hue, min_hue))
+
+    return get_gif_file(frames)
+
+
+def get_gif_file(frames: list, loop: bool = True, frame_delay: int = 100) -> bytes:
+    loop_value = 1 if loop else 0
+
+    with io.BytesIO() as gif_output:
+        iio.imwrite(gif_output, frames, format="GIF", loop=loop_value, frame_delay=100)
+        return gif_output.getvalue()
+
+
 def range_gif(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
     gif_frames = generate_frames(uploaded_image, frames_count, min_hue, max_hue)
 
-    with io.BytesIO() as gif_output:
-        iio.imwrite(gif_output, gif_frames, format="GIF", loop=0, duration=100)
-        return gif_output.getvalue()
+    return get_gif_file(gif_frames)
 
 
 def generate_frames(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
