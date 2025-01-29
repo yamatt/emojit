@@ -6,24 +6,6 @@ import numpy as np
 from PIL import Image
 
 
-def rotate_hue(image: np.ndarray, hue: int) -> np.ndarray:
-    """
-    Rotate the hue of an image.
-    Args:
-        image (np.ndarray): Image in RGB format.
-        angle (float): Angle to rotate the hue (in degrees).
-    Returns:
-        np.ndarray: Image with adjusted hue.
-    """
-    # Convert RGB to HSV
-    hsv_image = np.array(Image.fromarray(image).convert("HSV"))
-    _, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
-
-    hsv_image[..., 0] = hue
-
-    # Convert back to RGB
-    return np.array(Image.fromarray(hsv_image, "HSV").convert("RGBA"))
-
 def bounce(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
     first_half_frame_count = frames_count // 2
     second_half_frame_count = frames_count - first_half_frame_count
@@ -68,3 +50,20 @@ def generate_frames(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: i
         gif_frames.append(frame)
     return gif_frames
 
+def rotate_hue(image: np.ndarray, hue: int) -> np.ndarray:
+    """
+    Rotate the hue of an image.
+    Args:
+        image (np.ndarray): Image in RGB format.
+        angle (float): Angle to rotate the hue (in degrees).
+    Returns:
+        np.ndarray: Image with adjusted hue.
+    """
+    # Convert RGB to HSV
+    hsv_image = np.array(Image.fromarray(image).convert("HSV"))
+    _, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
+
+    hsv_image[..., 0] = hue
+
+    # Convert back to RGB
+    return np.array(Image.fromarray(hsv_image, "HSV").convert("RGBA"))
