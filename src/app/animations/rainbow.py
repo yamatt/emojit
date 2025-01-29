@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 
 
-def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
+def rotate_hue(image: np.ndarray, hue: int) -> np.ndarray:
     """
     Rotate the hue of an image.
     Args:
@@ -17,10 +17,8 @@ def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
     """
     # Convert RGB to HSV
     hsv_image = np.array(Image.fromarray(image).convert("HSV"))
-    hue, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
+    _, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
 
-    # Rotate hue
-    hue = (hue + int(angle / 360 * 255)) % 255
     hsv_image[..., 0] = hue
 
     # Convert back to RGB
@@ -50,9 +48,10 @@ def create_hue_rotation_gif(uploaded_image: BinaryIO, frames: int = 36) -> bytes
 
     # Generate frames with rotating hue
     gif_frames = []
-    for i in range(frames):
-        angle = 360 * i / frames
-        frame = rotate_hue(image, angle)
+    for frame_count in range(frames):
+        # 195-360
+        hue = 255 * frame_count / frames
+        frame = rotate_hue(image, hue)
 
         if image.shape[-1] == 4:
             frame[..., 3] = alpha
