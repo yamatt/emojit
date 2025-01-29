@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 
 
-def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
+def rotate_hue(image: np.ndarray, hue: int) -> np.ndarray:
     """
     Rotate the hue of an image.
     Args:
@@ -17,17 +17,26 @@ def rotate_hue(image: np.ndarray, angle: float) -> np.ndarray:
     """
     # Convert RGB to HSV
     hsv_image = np.array(Image.fromarray(image).convert("HSV"))
-    hue, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
+    _, sat, val = hsv_image[..., 0], hsv_image[..., 1], hsv_image[..., 2]
 
-    # Rotate hue
-    hue = (hue + int(angle / 360 * 255)) % 255
     hsv_image[..., 0] = hue
 
     # Convert back to RGB
     return np.array(Image.fromarray(hsv_image, "HSV").convert("RGBA"))
 
+def bounce(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
+    first_half_frame_count = frames_count // 2
+    second_half_frame_count = frames_count - first_half_frame_count
 
-def create_hue_rotation_gif(uploaded_image: BinaryIO, frames: int = 36) -> bytes:
+def range_gif(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
+    gif_frames = generate_frames(uploaded_image, frames_count, min_hue, max_hue)
+
+    with io.BytesIO() as gif_output:
+        iio.imwrite(gif_output, gif_frames, format="GIF", loop=0, duration=100)
+        return gif_output.getvalue()
+
+
+def generate_frames(uploaded_image: BinaryIO, frames_count: int = 36, min_hue: int = 0, max_hue: int = 255) -> bytes:
     """
     Create an animated GIF with rotating hue from an in-memory image.
     Args:
@@ -50,15 +59,12 @@ def create_hue_rotation_gif(uploaded_image: BinaryIO, frames: int = 36) -> bytes
 
     # Generate frames with rotating hue
     gif_frames = []
-    for i in range(frames):
-        # 195-360
-        angle = (165 * i / frames) + 195
-        frame = rotate_hue(image, angle)
+    for i in range(frames_count):
+        hue = max_hue * i / frames_count
+        frame = rotate_hue(image, hue)
 
         if image.shape[-1] == 4:
             frame[..., 3] = alpha
         gif_frames.append(frame)
+    return gif_frames
 
-    with io.BytesIO() as gif_output:
-        iio.imwrite(gif_output, gif_frames, format="GIF", loop=0, duration=100)
-        return gif_output.getvalue()
