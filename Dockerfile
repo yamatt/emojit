@@ -11,4 +11,4 @@ WORKDIR /app
 
 RUN ["/bin/uv", "sync"]
 
-ENTRYPOINT ["uv", "run", "fastapi", "run", "/app/app.py"]
+ENTRYPOINT ["uv", "run", "uvicorn", "app:app", "--workers", "2"]
